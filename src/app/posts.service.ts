@@ -5,6 +5,9 @@ import { map } from 'rxjs/operators'
 
 import { Post } from './post.model';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
+
+const BANKEND_URL = environment.apiUrl + "/posts/";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,7 @@ export class PostsService {
 
   getPosts(postPerpage: number, currentPage: number) {
     const queryParams = `?pagesize=${postPerpage}&page=${currentPage}`;
-    this.http.get<{ message: string, posts: any, maxPosts:number }>('http://localhost:3000/api/posts' + queryParams)
+    this.http.get<{ message: string, posts: any, maxPosts:number }>( BANKEND_URL + queryParams)
       .pipe(map((postData) => {
         return { post: postData.posts.map(post =>{
           return {
@@ -52,7 +55,7 @@ export class PostsService {
     postData.append("title", title);
     postData.append("content", content);
     postData.append("image",image, title);
-    this.http.post<{ message: string, post: Post }>('http://localhost:3000/api/posts', postData)
+    this.http.post<{ message: string, post: Post }>( BANKEND_URL, postData)
       .subscribe((responseData) => {
         this.router.navigate(["/"]);
       });
@@ -76,14 +79,14 @@ export class PostsService {
         creator: null
       };
     }
-    this.http.put('http://localhost:3000/api/posts/' + id, postData)
+    this.http.put( BANKEND_URL + id, postData)
     .subscribe(response => {
       this.router.navigate(["/"]);
     });
   }
 
   deletePost(postId: string){
-    return this.http.delete('http://localhost:3000/api/posts/' + postId);
+    return this.http.delete( BANKEND_URL + postId);
   }
 
 }
