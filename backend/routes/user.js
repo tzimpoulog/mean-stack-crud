@@ -20,7 +20,7 @@ router.post("/signup", (req, res, next) => {
         })
             .catch(err => {
                 res.status(500).json({
-                    error: err
+                    message: "Invalid authentication credentials!"
                 });
             });
     });
@@ -45,7 +45,7 @@ router.post("/login", (req, res, next) => {
                 });
             }
             const token = jwt.sign(
-                { email: fetchedUser.email, userId: fetchedUser._id}, 
+                { email: fetchedUser.email, userId: fetchedUser._id },
                 'secret_this-should_be_longer',
                 { expiresIn: "1h" });
             res.status(200).json({
@@ -56,9 +56,9 @@ router.post("/login", (req, res, next) => {
         })
         .catch(err => {
             return res.status(401).json({
-                message: 'Auth failed'
+                message: 'Invalid authentication credentials!'
             });
         });
-    });
+});
 
 module.exports = router;
